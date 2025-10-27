@@ -254,10 +254,10 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
         # 阻塞等待数据就绪
         login_loop.exec()
         # 删除相关
-        if self.start_user_info_client is not None:
+        if hasattr(self, "start_user_info_client") and self.start_user_info_client is not None:
             self.start_user_info_client.deleteLater()
             self.start_user_info_client = None
-        if self.start_user_data_client is not None:
+        if hasattr(self, "start_user_data_client") and self.start_user_data_client is not None:
             self.start_user_data_client.deleteLater()
             self.start_user_data_client = None
         # ***************** 卡片检测 *****************
