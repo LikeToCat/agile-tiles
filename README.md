@@ -69,6 +69,12 @@ Windows桌面端软件，摸鱼办公神器
     <img width="550" src="https://index.agiletiles.com/website/images/screenshot/screenshot-music-theme.png">
 </p>
 
+## Star历史
+
+<p align="center">
+    <img width="550" src="https://api.star-history.com/svg?repos=baby7/agile-tiles&type=timeline">
+</p>
+
 # 下载
 
 ### 官网
