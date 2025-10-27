@@ -19,7 +19,7 @@ print("_热键监听包加载完成")
 from PySide6 import QtGui
 from PySide6.QtGui import QPixmap, QFont
 from PySide6.QtCore import QEvent, Qt, QSettings, Signal, QEventLoop, Q_ARG, Slot, \
-    QMetaObject, QTimer, QSharedMemory
+    QMetaObject, QTimer, QSharedMemory, QPoint
 from PySide6.QtWidgets import QApplication, QSystemTrayIcon, QStyleFactory
 from PySide6.QtNetwork import QLocalServer, QLocalSocket, QNetworkDiskCache, QNetworkReply
 print("_基础界面框架加载完成")
@@ -101,6 +101,13 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
     sys_icon = None                         # 图标文件(QIcon)
     sys_icon_pixmap = None                  # 图标文件(QPixmap)
     info_logger = None                      # 日志
+    # 窗口移动相关参数
+    dragging = False
+    drag_position = QPoint()
+    scale_factor = 1.0
+    resize_edge = None  # 用于跟踪当前调整大小的边缘
+    resize_start_pos = None
+    resize_start_geometry = None
     # 设备id
     hardware_id = None
     os_version = None
@@ -363,7 +370,6 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
         self.widget_header.show()
         # 判断用户是否登录
         if self.current_user['username'] == "LocalUser":
-            self.push_button_header_info.setText("未登录状态不存储数据！")
             self.push_button_area_user_login.show()
             self.push_button_area_user_vip_subscription.hide()
             self.push_button_area_user_vip_subscription_history.hide()
@@ -371,8 +377,10 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
             self.push_button_area_user_message_logout.hide()
             self.label_area_user_message_logout.hide()
         else:
-            self.push_button_header_info.hide()
             self.push_button_area_user_login.hide()
+        # 顶部信息按钮隐藏
+        self.push_button_header_info.setText("点击这里拖拽移动")
+        self.push_button_header_info.show()
         # 菜单栏显示
         self.label_menu.show()
         # 小卡片管理显示
@@ -421,8 +429,14 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
             # 设置主题到QSetting
             settings = QSettings(self.app_name, "Theme")
             settings.setValue("IsDark", self.is_dark)
+        # 注销登录前获取用户名
+        user_name = None
+        if self.current_user is not None and "username" in self.current_user:
+            user_name = self.current_user["username"]
+            if user_name == "LocalUser":
+                user_name = None
         # 显示登录窗口
-        self.single_login_tip_dialog = StartLoginWindow(None, self)
+        self.single_login_tip_dialog = StartLoginWindow(None, self, user_name=user_name)
         self.single_login_tip_dialog.refresh_geometry(self.toolkit.resolution_util.get_screen(self))
         self.single_login_tip_dialog.show()
 
@@ -530,11 +544,17 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
                 print(result)
                 print(f"登录失败，原因：{result['msg']}")
                 self.toolkit.message_box_util.box_information(self, "错误信息", "登录失败，请重新登录")
+                # 注销登录前获取用户名
+                user_name = None
+                if self.current_user is not None and "username" in self.current_user:
+                    user_name = self.current_user["username"]
+                    if user_name == "LocalUser":
+                        user_name = None
                 # 注销登录
                 self.database_manager.logout_user()
                 self.current_user = None
                 # 打开登录窗口手动登录
-                self.show_start_login_window()
+                self.show_start_login_window(user_name)
                 # 判断用户是否登录，未登录则退出程序
                 self.current_user = self.database_manager.get_current_user()
                 if self.current_user is None or self.login_restart_data is None:
@@ -581,14 +601,14 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
             print(f"_safe_do_refresh error: {str(e)}")
         self.login_restart_data = None
 
-    def show_start_login_window(self):
+    def show_start_login_window(self, user_name=None):
         self.start_login_view = True
         if not self.is_first:
             # 设置主题到QSetting
             settings = QSettings(self.app_name, "Theme")
             settings.setValue("IsDark", self.is_dark)
         # 显示登录窗口
-        self.user_server_recover_win = StartLoginWindow(None, self)
+        self.user_server_recover_win = StartLoginWindow(None, self, user_name=user_name)
         self.user_server_recover_win.refresh_geometry(self.toolkit.resolution_util.get_screen(self))
         self.user_server_recover_win.exec()
         self.start_login_view = False
@@ -843,6 +863,12 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
             try:
                 # 隐藏窗口
                 self.hide()
+                # 注销登录前获取用户名
+                user_name = None
+                if self.current_user is not None and "username" in self.current_user:
+                    user_name = self.current_user["username"]
+                    if user_name == "LocalUser":
+                        user_name = None
                 # 消除登录状态
                 self.user_data_status = "logout"
                 self.is_login = False
@@ -856,7 +882,7 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
                 # 登出前的操作
                 self.do_logout()
                 # 启动登录窗口
-                self.show_start_login_window()
+                self.show_start_login_window(user_name)
             except Exception as e:
                 self.info_logger.error(traceback.format_exc())
                 exit()
@@ -1417,6 +1443,81 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
             self.main_card_manager.hide_form()
         if hasattr(self, "header_more_menu"):
             self.header_more_menu.hide()
+
+    ''' **********************************鼠标监听拖拽*************************************** '''
+    def mousePressEvent(self, event):
+        if event.button() == Qt.LeftButton:
+            # 如果不在上方self.widget_header导航条区域内则不进行拖拽
+            if not self.widget_header.geometry().contains(event.position().toPoint()):
+                event.accept()
+                return
+            # 开始拖拽
+            self.dragging = True
+            self.drag_position = event.globalPosition().toPoint() - self.frameGeometry().topLeft()
+            event.accept()
+
+    def mouseMoveEvent(self, event):
+        # 处理拖拽
+        if event.buttons() == Qt.LeftButton and self.dragging:
+            self.move(event.globalPosition().toPoint() - self.drag_position)
+            event.accept()
+
+    def mouseReleaseEvent(self, event):
+        if event.button() == Qt.LeftButton:
+            self.dragging = False
+            self.resize_edge = None
+            self.resize_start_pos = None
+            self.resize_start_geometry = None
+            event.accept()
+            # 拖拽结束后判断窗口位置
+            self.check_window_position()
+
+    def check_window_position(self):
+        """判断窗口在屏幕中的位置"""
+        # 获取窗口的几何信息
+        window_geometry = self.frameGeometry()
+        window_center = window_geometry.center()
+        # 获取窗口所在的屏幕
+        screen = self.get_screen_at_point(window_center)
+        if not screen:
+            print("未找到对应的屏幕")
+            return
+        # 获取屏幕的几何信息
+        screen_geometry = screen.geometry()
+        screen_center_x = screen_geometry.center().x()
+        # 判断左右位置
+        if window_center.x() < screen_center_x:
+            position = "Left"
+        else:
+            position = "Right"
+        # 输出位置信息
+        print(f"屏幕: {screen.name()} | 位置: {position}")
+        # 设置新的屏幕和定位
+        self.set_new_screen_and_locate(screen.name(), position)
+
+    def get_screen_at_point(self, point):
+        """获取指定点所在的屏幕"""
+        screens = QApplication.screens()
+        for screen in screens:
+            if screen.geometry().contains(point):
+                return screen
+        return None
+
+    def set_new_screen_and_locate(self, screen_name, locate):
+        # 复制设置数据
+        setting_data = copy.deepcopy(self.main_data["data"]["SettingCard"])
+        setting_data[self.hardware_id]["screenName"] = screen_name
+        setting_data[self.hardware_id]["windowPosition"] = locate
+        # 触发数据更新
+        trigger_type = data_save_constant.TRIGGER_TYPE_SETTING_SCREEN
+        need_upload = True
+        data_type = data_save_constant.DATA_TYPE_ENDURING
+        self.local_trigger_data_update(trigger_type=trigger_type,
+                            need_upload=need_upload,
+                            in_data=setting_data,
+                            data_type=data_type,
+                            card_type=data_save_constant.CARD_TYPE_Big,
+                            card_name=None)
 
     ''' **********************************键盘监听*************************************** '''
     def keyboard_re_init(self):

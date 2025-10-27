@@ -28,4 +28,6 @@ help_url = "https://www.agiletiles.com/help/help.html"
 about_us_url = "https://www.agiletiles.com/about.html"
 # 开源地址
 open_source_url = "https://github.com/baby7/agile-tiles"
+# 开源地址
+qq_grop = "https://qm.qq.com/cgi-bin/qm/qr?k=VK59itvpdf8BYA_cOXbLwLWNz9XqUuww&amp;jump_from=webapi&amp;authKey=86SEXINZcwHSIdaoXlSJJdQx5wvnoG+rJPMfXUSjL9ojBejru2M3IHNdS/Svn91m"
 

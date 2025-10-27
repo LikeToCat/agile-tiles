@@ -26,7 +26,7 @@ class Ui_Form(object):
         Form.resize(2069, 1255)
         self.setting_area = QScrollArea(Form)
         self.setting_area.setObjectName(u"setting_area")
-        self.setting_area.setGeometry(QRect(490, 10, 386, 531))
+        self.setting_area.setGeometry(QRect(490, 10, 386, 611))
         font = QFont()
         font.setFamilies([u"\u601d\u6e90\u9ed1\u4f53"])
         font.setBold(True)
@@ -44,7 +44,7 @@ class Ui_Form(object):
         self.setting_area.setWidgetResizable(True)
         self.scrollAreaWidgetContents_37 = QWidget()
         self.scrollAreaWidgetContents_37.setObjectName(u"scrollAreaWidgetContents_37")
-        self.scrollAreaWidgetContents_37.setGeometry(QRect(0, 0, 386, 531))
+        self.scrollAreaWidgetContents_37.setGeometry(QRect(0, 0, 386, 611))
         self.gridLayout = QGridLayout(self.scrollAreaWidgetContents_37)
         self.gridLayout.setObjectName(u"gridLayout")
         self.verticalLayout = QVBoxLayout()
@@ -142,19 +142,19 @@ class Ui_Form(object):
 
         self.horizontalLayout_4.addWidget(self.push_button_setting_version)
 
-        self.push_button_setting_ticket = QPushButton(self.widget_setting_update)
-        self.push_button_setting_ticket.setObjectName(u"push_button_setting_ticket")
-        self.push_button_setting_ticket.setMinimumSize(QSize(70, 70))
-        self.push_button_setting_ticket.setStyleSheet(u"")
+        self.push_button_setting_service_agreement = QPushButton(self.widget_setting_update)
+        self.push_button_setting_service_agreement.setObjectName(u"push_button_setting_service_agreement")
+        self.push_button_setting_service_agreement.setMinimumSize(QSize(70, 70))
+        self.push_button_setting_service_agreement.setStyleSheet(u"")
 
-        self.horizontalLayout_4.addWidget(self.push_button_setting_ticket)
+        self.horizontalLayout_4.addWidget(self.push_button_setting_service_agreement)
 
-        self.push_button_setting_feedback_opinion = QPushButton(self.widget_setting_update)
-        self.push_button_setting_feedback_opinion.setObjectName(u"push_button_setting_feedback_opinion")
-        self.push_button_setting_feedback_opinion.setMinimumSize(QSize(70, 70))
-        self.push_button_setting_feedback_opinion.setStyleSheet(u"")
+        self.push_button_setting_privacy_agreement = QPushButton(self.widget_setting_update)
+        self.push_button_setting_privacy_agreement.setObjectName(u"push_button_setting_privacy_agreement")
+        self.push_button_setting_privacy_agreement.setMinimumSize(QSize(70, 70))
+        self.push_button_setting_privacy_agreement.setStyleSheet(u"")
 
-        self.horizontalLayout_4.addWidget(self.push_button_setting_feedback_opinion)
+        self.horizontalLayout_4.addWidget(self.push_button_setting_privacy_agreement)
 
         self.horizontalSpacer_6 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
@@ -185,6 +185,13 @@ class Ui_Form(object):
         self.gridLayout_2.setObjectName(u"gridLayout_2")
         self.horizontalLayout_3 = QHBoxLayout()
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
+        self.push_button_setting_qq_grop = QPushButton(self.widget_setting_about)
+        self.push_button_setting_qq_grop.setObjectName(u"push_button_setting_qq_grop")
+        self.push_button_setting_qq_grop.setMinimumSize(QSize(70, 70))
+        self.push_button_setting_qq_grop.setStyleSheet(u"")
+
+        self.horizontalLayout_3.addWidget(self.push_button_setting_qq_grop)
+
         self.push_button_setting_faq = QPushButton(self.widget_setting_about)
         self.push_button_setting_faq.setObjectName(u"push_button_setting_faq")
         self.push_button_setting_faq.setMinimumSize(QSize(70, 70))
@@ -192,26 +199,19 @@ class Ui_Form(object):
 
         self.horizontalLayout_3.addWidget(self.push_button_setting_faq)
 
-        self.push_button_setting_service_agreement = QPushButton(self.widget_setting_about)
-        self.push_button_setting_service_agreement.setObjectName(u"push_button_setting_service_agreement")
-        self.push_button_setting_service_agreement.setMinimumSize(QSize(70, 70))
-        self.push_button_setting_service_agreement.setStyleSheet(u"")
+        self.push_button_setting_ticket = QPushButton(self.widget_setting_about)
+        self.push_button_setting_ticket.setObjectName(u"push_button_setting_ticket")
+        self.push_button_setting_ticket.setMinimumSize(QSize(70, 70))
+        self.push_button_setting_ticket.setStyleSheet(u"")
 
-        self.horizontalLayout_3.addWidget(self.push_button_setting_service_agreement)
+        self.horizontalLayout_3.addWidget(self.push_button_setting_ticket)
 
-        self.push_button_setting_privacy_agreement = QPushButton(self.widget_setting_about)
-        self.push_button_setting_privacy_agreement.setObjectName(u"push_button_setting_privacy_agreement")
-        self.push_button_setting_privacy_agreement.setMinimumSize(QSize(70, 70))
-        self.push_button_setting_privacy_agreement.setStyleSheet(u"")
+        self.push_button_setting_feedback_opinion = QPushButton(self.widget_setting_about)
+        self.push_button_setting_feedback_opinion.setObjectName(u"push_button_setting_feedback_opinion")
+        self.push_button_setting_feedback_opinion.setMinimumSize(QSize(70, 70))
+        self.push_button_setting_feedback_opinion.setStyleSheet(u"")
 
-        self.horizontalLayout_3.addWidget(self.push_button_setting_privacy_agreement)
-
-        self.push_button_setting_about_us = QPushButton(self.widget_setting_about)
-        self.push_button_setting_about_us.setObjectName(u"push_button_setting_about_us")
-        self.push_button_setting_about_us.setMinimumSize(QSize(70, 70))
-        self.push_button_setting_about_us.setStyleSheet(u"")
-
-        self.horizontalLayout_3.addWidget(self.push_button_setting_about_us)
+        self.horizontalLayout_3.addWidget(self.push_button_setting_feedback_opinion)
 
         self.horizontalSpacer_3 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
@@ -256,6 +256,20 @@ class Ui_Form(object):
 
         self.horizontalLayout_7.addWidget(self.push_button_setting_open_source_list)
 
+        self.push_button_setting_official_website = QPushButton(self.widget_setting_open_source)
+        self.push_button_setting_official_website.setObjectName(u"push_button_setting_official_website")
+        self.push_button_setting_official_website.setMinimumSize(QSize(70, 70))
+        self.push_button_setting_official_website.setStyleSheet(u"")
+
+        self.horizontalLayout_7.addWidget(self.push_button_setting_official_website)
+
+        self.push_button_setting_about_us = QPushButton(self.widget_setting_open_source)
+        self.push_button_setting_about_us.setObjectName(u"push_button_setting_about_us")
+        self.push_button_setting_about_us.setMinimumSize(QSize(70, 70))
+        self.push_button_setting_about_us.setStyleSheet(u"")
+
+        self.horizontalLayout_7.addWidget(self.push_button_setting_about_us)
+
         self.horizontalSpacer_9 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_7.addItem(self.horizontalSpacer_9)
@@ -287,7 +301,7 @@ class Ui_Form(object):
         self.label_background.setGeometry(QRect(0, 0, 451, 1041))
         self.user_area = QScrollArea(Form)
         self.user_area.setObjectName(u"user_area")
-        self.user_area.setGeometry(QRect(480, 560, 1051, 781))
+        self.user_area.setGeometry(QRect(470, 630, 1051, 781))
         self.user_area.setStyleSheet(u"border-style:solid; border-radius:10px; border:0px groove gray; color:rgb(0, 0, 0);\n"
 "border-color:rgba(255, 255, 255, 0); background-color:rgba(255, 255, 255, 100);")
         self.user_area.setWidgetResizable(True)
@@ -1201,19 +1215,21 @@ class Ui_Form(object):
         self.push_button_setting_card_permutation.setText(QCoreApplication.translate("Form", u"\u5361\u7247\u8bbe\u8ba1", None))
         self.push_button_setting_screen.setText(QCoreApplication.translate("Form", u"\u754c\u9762\u8bbe\u7f6e", None))
         self.push_button_setting_theme.setText(QCoreApplication.translate("Form", u"\u4e3b\u9898\u8bbe\u7f6e", None))
-        self.label_20.setText(QCoreApplication.translate("Form", u"\u95ee\u9898\u548c\u66f4\u65b0", None))
+        self.label_20.setText(QCoreApplication.translate("Form", u"\u66f4\u65b0\u548c\u534f\u8bae", None))
         self.push_button_setting_version_info.setText(QCoreApplication.translate("Form", u"\u7248\u672c\u4fe1\u606f", None))
         self.push_button_setting_version.setText(QCoreApplication.translate("Form", u"\u68c0\u6d4b\u66f4\u65b0", None))
-        self.push_button_setting_ticket.setText(QCoreApplication.translate("Form", u"\u4f1a\u5458\u5de5\u5355", None))
-        self.push_button_setting_feedback_opinion.setText(QCoreApplication.translate("Form", u"\u610f\u89c1\u53cd\u9988", None))
-        self.label_19.setText(QCoreApplication.translate("Form", u"\u5173\u4e8e", None))
-        self.push_button_setting_faq.setText(QCoreApplication.translate("Form", u"\u5e38\u89c1\u95ee\u9898", None))
         self.push_button_setting_service_agreement.setText(QCoreApplication.translate("Form", u"\u670d\u52a1\u534f\u8bae", None))
         self.push_button_setting_privacy_agreement.setText(QCoreApplication.translate("Form", u"\u9690\u79c1\u534f\u8bae", None))
-        self.push_button_setting_about_us.setText(QCoreApplication.translate("Form", u"\u5173\u4e8e\u6211\u4eec", None))
-        self.label_21.setText(QCoreApplication.translate("Form", u"\u5f00\u6e90", None))
+        self.label_19.setText(QCoreApplication.translate("Form", u"\u95ee\u9898\u548c\u53cd\u9988", None))
+        self.push_button_setting_qq_grop.setText(QCoreApplication.translate("Form", u"QQ\u4ea4\u6d41\u7fa4", None))
+        self.push_button_setting_faq.setText(QCoreApplication.translate("Form", u"\u5e38\u89c1\u95ee\u9898", None))
+        self.push_button_setting_ticket.setText(QCoreApplication.translate("Form", u"\u4f1a\u5458\u5de5\u5355", None))
+        self.push_button_setting_feedback_opinion.setText(QCoreApplication.translate("Form", u"\u610f\u89c1\u53cd\u9988", None))
+        self.label_21.setText(QCoreApplication.translate("Form", u"\u5f00\u6e90\u548c\u76f8\u5173", None))
         self.push_button_setting_open_source_link.setText(QCoreApplication.translate("Form", u"\u5f00\u6e90\u5730\u5740", None))
         self.push_button_setting_open_source_list.setText(QCoreApplication.translate("Form", u"\u5f00\u6e90\u8bb8\u53ef", None))
+        self.push_button_setting_official_website.setText(QCoreApplication.translate("Form", u"\u5b98\u65b9\u7f51\u7ad9", None))
+        self.push_button_setting_about_us.setText(QCoreApplication.translate("Form", u"\u5173\u4e8e\u6211\u4eec", None))
         self.label_background.setText("")
         self.label_user_avatar.setText("")
         self.label_area_user_message_nick_name.setText(QCoreApplication.translate("Form", u"\u6635\u79f0", None))

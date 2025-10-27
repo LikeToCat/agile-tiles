@@ -35,7 +35,7 @@ class StartLoginWindow(AgileTilesFramelessDialog, Ui_Form):
     access_token = None
     refresh_token = None
 
-    def __init__(self, parent=None, use_parent=None):
+    def __init__(self, parent=None, use_parent=None, user_name=None):
         super(StartLoginWindow, self).__init__()
         self.setupUi(self)
         # 初始化
@@ -136,6 +136,9 @@ class StartLoginWindow(AgileTilesFramelessDialog, Ui_Form):
         self.line_edit_user_register_invite_code.returnPressed.connect(self.push_button_user_register_click)
         # 注册忘记密码密码确认输入框绑定回车触发忘记密码函数
         self.line_edit_user_forget_password_check.returnPressed.connect(self.push_button_user_forget_click)
+        # 初始化用户名
+        if user_name is not None and user_name != "" and user_name != "LocalUser":
+            self.line_edit_user_login_username.setText(user_name)
 
     def set_password_edit_style(self, line_edit_widget, line_edit, control):
         # 密码框底部

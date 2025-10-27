@@ -19,7 +19,7 @@
      <x>490</x>
      <y>10</y>
      <width>386</width>
-     <height>531</height>
+     <height>611</height>
     </rect>
    </property>
    <property name="font">
@@ -53,7 +53,7 @@ background-color:rgba(255, 255, 255, 100);
       <x>0</x>
       <y>0</y>
       <width>386</width>
-      <height>531</height>
+      <height>611</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">
@@ -192,7 +192,7 @@ background-color:rgba(255, 255, 255, 200);
           <string notr="true">background: transparent;</string>
          </property>
          <property name="text">
-          <string>问题和更新</string>
+          <string>更新和协议</string>
          </property>
         </widget>
        </item>
@@ -242,100 +242,6 @@ background-color:rgba(255, 255, 255, 200);
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="push_button_setting_ticket">
-              <property name="minimumSize">
-               <size>
-                <width>70</width>
-                <height>70</height>
-               </size>
-              </property>
-              <property name="styleSheet">
-               <string notr="true"/>
-              </property>
-              <property name="text">
-               <string>会员工单</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="push_button_setting_feedback_opinion">
-              <property name="minimumSize">
-               <size>
-                <width>70</width>
-                <height>70</height>
-               </size>
-              </property>
-              <property name="styleSheet">
-               <string notr="true"/>
-              </property>
-              <property name="text">
-               <string>意见反馈</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <spacer name="horizontalSpacer_6">
-              <property name="orientation">
-               <enum>Qt::Orientation::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-           </layout>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="label_19">
-         <property name="font">
-          <font>
-           <pointsize>11</pointsize>
-          </font>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">background: transparent;</string>
-         </property>
-         <property name="text">
-          <string>关于</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QWidget" name="widget_setting_about" native="true">
-         <property name="styleSheet">
-          <string notr="true">QWidget {
-border-style: solid;
-border-radius: 10px;
-border: 1px solid white;
-background-color:rgba(255, 255, 255, 200);
-}</string>
-         </property>
-         <layout class="QGridLayout" name="gridLayout_2">
-          <item row="1" column="0">
-           <layout class="QHBoxLayout" name="horizontalLayout_3">
-            <item>
-             <widget class="QPushButton" name="push_button_setting_faq">
-              <property name="minimumSize">
-               <size>
-                <width>70</width>
-                <height>70</height>
-               </size>
-              </property>
-              <property name="styleSheet">
-               <string notr="true"/>
-              </property>
-              <property name="text">
-               <string>常见问题</string>
-              </property>
-             </widget>
-            </item>
-            <item>
              <widget class="QPushButton" name="push_button_setting_service_agreement">
               <property name="minimumSize">
                <size>
@@ -368,7 +274,53 @@ background-color:rgba(255, 255, 255, 200);
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="push_button_setting_about_us">
+             <spacer name="horizontalSpacer_6">
+              <property name="orientation">
+               <enum>Qt::Orientation::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_19">
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background: transparent;</string>
+         </property>
+         <property name="text">
+          <string>问题和反馈</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QWidget" name="widget_setting_about" native="true">
+         <property name="styleSheet">
+          <string notr="true">QWidget {
+border-style: solid;
+border-radius: 10px;
+border: 1px solid white;
+background-color:rgba(255, 255, 255, 200);
+}</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_2">
+          <item row="1" column="0">
+           <layout class="QHBoxLayout" name="horizontalLayout_3">
+            <item>
+             <widget class="QPushButton" name="push_button_setting_qq_grop">
               <property name="minimumSize">
                <size>
                 <width>70</width>
@@ -379,7 +331,55 @@ background-color:rgba(255, 255, 255, 200);
                <string notr="true"/>
               </property>
               <property name="text">
-               <string>关于我们</string>
+               <string>QQ交流群</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="push_button_setting_faq">
+              <property name="minimumSize">
+               <size>
+                <width>70</width>
+                <height>70</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true"/>
+              </property>
+              <property name="text">
+               <string>常见问题</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="push_button_setting_ticket">
+              <property name="minimumSize">
+               <size>
+                <width>70</width>
+                <height>70</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true"/>
+              </property>
+              <property name="text">
+               <string>会员工单</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="push_button_setting_feedback_opinion">
+              <property name="minimumSize">
+               <size>
+                <width>70</width>
+                <height>70</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true"/>
+              </property>
+              <property name="text">
+               <string>意见反馈</string>
               </property>
              </widget>
             </item>
@@ -412,7 +412,7 @@ background-color:rgba(255, 255, 255, 200);
           <string notr="true">background: transparent;</string>
          </property>
          <property name="text">
-          <string>开源</string>
+          <string>开源和相关</string>
          </property>
         </widget>
        </item>
@@ -458,6 +458,38 @@ background-color:rgba(255, 255, 255, 200);
               </property>
               <property name="text">
                <string>开源许可</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="push_button_setting_official_website">
+              <property name="minimumSize">
+               <size>
+                <width>70</width>
+                <height>70</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true"/>
+              </property>
+              <property name="text">
+               <string>官方网站</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="push_button_setting_about_us">
+              <property name="minimumSize">
+               <size>
+                <width>70</width>
+                <height>70</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true"/>
+              </property>
+              <property name="text">
+               <string>关于我们</string>
               </property>
              </widget>
             </item>
@@ -539,8 +571,8 @@ background-color:rgba(255, 255, 255, 200);
   <widget class="QScrollArea" name="user_area">
    <property name="geometry">
     <rect>
-     <x>480</x>
-     <y>560</y>
+     <x>470</x>
+     <y>630</y>
      <width>1051</width>
      <height>781</height>
     </rect>

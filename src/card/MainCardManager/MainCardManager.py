@@ -703,13 +703,13 @@ class MainCardManager(QObject):
         self.main_object.push_button_header_title.setCursor(QCursor(Qt.PointingHandCursor))     # 鼠标手形
         self.main_object.layout_header.addWidget(self.main_object.push_button_header_title)
         # 导航栏中间暂时用QLabel放置信息
-        self.main_object.layout_header.addStretch()
-        self.main_object.push_button_header_info = QPushButton()
+        # self.main_object.layout_header.addStretch()
+        self.main_object.push_button_header_info = QLabel()
         self.main_object.push_button_header_info.setObjectName(u"push_button_header_info")
         self.main_object.push_button_header_info.setText("")
-        self.main_object.push_button_header_info.setCursor(QCursor(Qt.PointingHandCursor))     # 鼠标手形
-        self.main_object.layout_header.addWidget(self.main_object.push_button_header_info)
-        self.main_object.layout_header.addStretch()
+        self.main_object.push_button_header_info.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.main_object.layout_header.addWidget(self.main_object.push_button_header_info, stretch=1)
+        # self.main_object.layout_header.addStretch()
         # 右侧第一个是退出按钮
         # self.main_object.push_button_header_exit = QPushButton()
         # self.main_object.push_button_header_exit.setObjectName(u"push_button_header_exit")
@@ -777,7 +777,7 @@ class MainCardManager(QObject):
         self.main_object.layout_header.addWidget(self.main_object.push_button_hide_window)
         # 点击事件
         self.main_object.push_button_header_title.clicked.connect(partial(self.click_header_title_button))
-        self.main_object.push_button_header_info.clicked.connect(partial(self.push_button_login_click))
+        # self.main_object.push_button_header_info.clicked.connect(partial(self.push_button_login_click))
         # self.main_object.push_button_header_exit.clicked.connect(partial(self.main_object.quit_before,  False))
         # self.main_object.push_button_screenshot.clicked.connect(
         #     partial(self.main_object.toolkit.image_util.screenshot, self.main_object))
@@ -1087,14 +1087,13 @@ class MainCardManager(QObject):
                 .replace("QPushButton", "QToolButton") + "QToolButton::menu-indicator {image: none;}"
             )
             self.main_object.push_button_header_info.setStyleSheet("""
-            QPushButton {
-                background-color: rgba(34, 34, 34, 255);
+            QLabel {
+                background-color: transparent;
                 padding: 5px;
-                border-radius: 8px;
-                color: rgb(245, 61, 79);
+                color: rgba(125, 125, 125, 100);
             }
-            QPushButton:hover {
-                color: red;
+            QLabel:hover {
+                color: rgba(255, 255, 255, 200);
             }
             """)
         else:
@@ -1106,14 +1105,13 @@ class MainCardManager(QObject):
                 .replace("QPushButton", "QToolButton") + "QToolButton::menu-indicator {image: none;}"
             )
             self.main_object.push_button_header_info.setStyleSheet("""
-            QPushButton {
-                background-color: rgba(255, 255, 255, 100);
+            QLabel {
+                background-color: transparent;
                 padding: 5px;
-                border-radius: 8px;
-                color: rgb(245, 61, 79);
+                color: rgba(125, 125, 125, 100);
             }
-            QPushButton:hover {
-                color: red;
+            QLabel:hover {
+                color: rgba(0, 0, 0, 200);
             }
             """)
         # 应用顶部更多按钮的菜单样式

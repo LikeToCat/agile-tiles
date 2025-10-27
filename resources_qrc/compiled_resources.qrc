@@ -5,6 +5,7 @@
         <file alias="static/img/icon/icon.ico">resources/img/icon/icon.ico</file>
         <file alias="static/img/icon/icon.png">resources/img/icon/icon.png</file>
         <file alias="static/img/icon/icon_title.png">resources/img/icon/icon_title.png</file>
+        <file alias="static/img/icon/qq_qr_code.png">resources/img/icon/qq_qr_code.png</file>
         <file alias="static/img/IconPark/dark/Arrows/down-one.png">resources/img/IconPark/dark/Arrows/down-one.png</file>
         <file alias="static/img/IconPark/dark/Arrows/left-one.png">resources/img/IconPark/dark/Arrows/left-one.png</file>
         <file alias="static/img/IconPark/dark/Arrows/right-one.png">resources/img/IconPark/dark/Arrows/right-one.png</file>

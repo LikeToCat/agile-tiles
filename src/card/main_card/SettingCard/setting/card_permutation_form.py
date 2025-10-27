@@ -16,8 +16,8 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QGraphicsView, QGridLayout, QHBoxLayout,
-    QLabel, QLayout, QPushButton, QSizePolicy,
-    QSpacerItem, QVBoxLayout, QWidget)
+    QLabel, QLayout, QPushButton, QScrollArea,
+    QSizePolicy, QSpacerItem, QVBoxLayout, QWidget)
 
 class Ui_Form(object):
     def setupUi(self, Form):
@@ -25,12 +25,8 @@ class Ui_Form(object):
             Form.setObjectName(u"Form")
         Form.resize(1344, 823)
         Form.setMinimumSize(QSize(500, 500))
-        self.gridLayout_3 = QGridLayout(Form)
-        self.gridLayout_3.setObjectName(u"gridLayout_3")
-        self.main_card_layout = QHBoxLayout()
-        self.main_card_layout.setObjectName(u"main_card_layout")
-        self.verticalLayout_2 = QVBoxLayout()
-        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
+        self.horizontalLayout_8 = QHBoxLayout(Form)
+        self.horizontalLayout_8.setObjectName(u"horizontalLayout_8")
         self.verticalLayout = QVBoxLayout()
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.widget_menu_store = QWidget(Form)
@@ -67,7 +63,7 @@ class Ui_Form(object):
 "border: none;\n"
 "background: rgba(0, 0, 0, 0);\n"
 "text-align:center;")
-        self.label.setAlignment(Qt.AlignCenter)
+        self.label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.horizontalLayout_6.addWidget(self.label)
 
@@ -83,8 +79,9 @@ class Ui_Form(object):
 
         self.widget_card_store = QWidget(Form)
         self.widget_card_store.setObjectName(u"widget_card_store")
-        self.widget_card_store.setMinimumSize(QSize(800, 0))
-        self.widget_card_store.setMaximumSize(QSize(1000, 16777215))
+        self.widget_card_store.setEnabled(True)
+        self.widget_card_store.setMinimumSize(QSize(0, 0))
+        self.widget_card_store.setMaximumSize(QSize(16777215, 16777215))
         self.widget_card_store.setFont(font)
         self.widget_card_store.setStyleSheet(u"QWidget {\n"
 "    border-style: solid;\n"
@@ -96,7 +93,7 @@ class Ui_Form(object):
 "}")
         self.gridLayout_2 = QGridLayout(self.widget_card_store)
         self.gridLayout_2.setObjectName(u"gridLayout_2")
-        self.gridLayout_2.setSizeConstraint(QLayout.SetDefaultConstraint)
+        self.gridLayout_2.setSizeConstraint(QLayout.SizeConstraint.SetDefaultConstraint)
         self.layout_card_store = QVBoxLayout()
         self.layout_card_store.setObjectName(u"layout_card_store")
 
@@ -106,10 +103,7 @@ class Ui_Form(object):
         self.verticalLayout.addWidget(self.widget_card_store)
 
 
-        self.verticalLayout_2.addLayout(self.verticalLayout)
-
-
-        self.main_card_layout.addLayout(self.verticalLayout_2)
+        self.horizontalLayout_8.addLayout(self.verticalLayout)
 
         self.manage_card_layout = QVBoxLayout()
         self.manage_card_layout.setObjectName(u"manage_card_layout")
@@ -144,21 +138,21 @@ class Ui_Form(object):
 
         self.horizontalLayout_5.addWidget(self.label_2)
 
-        self.widget_middle = QWidget(self.widget_menu_manager)
-        self.widget_middle.setObjectName(u"widget_middle")
-        self.widget_middle.setMinimumSize(QSize(200, 0))
-        self.widget_middle.setStyleSheet(u"QWidget {\n"
+        self.widget_middle_width = QWidget(self.widget_menu_manager)
+        self.widget_middle_width.setObjectName(u"widget_middle_width")
+        self.widget_middle_width.setMinimumSize(QSize(200, 0))
+        self.widget_middle_width.setStyleSheet(u"QWidget {\n"
 "border-style: solid;\n"
 "border-radius: 10px;\n"
 "border: 1px solid white;\n"
 "background-color:rgba(255, 255, 255, 200);\n"
 "}")
-        self.gridLayout_6 = QGridLayout(self.widget_middle)
+        self.gridLayout_6 = QGridLayout(self.widget_middle_width)
         self.gridLayout_6.setObjectName(u"gridLayout_6")
         self.gridLayout_6.setContentsMargins(4, 4, 4, 4)
         self.horizontalLayout_3 = QHBoxLayout()
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
-        self.push_button_add_box_width = QPushButton(self.widget_middle)
+        self.push_button_add_box_width = QPushButton(self.widget_middle_width)
         self.push_button_add_box_width.setObjectName(u"push_button_add_box_width")
         self.push_button_add_box_width.setMinimumSize(QSize(0, 20))
         self.push_button_add_box_width.setMaximumSize(QSize(16777215, 16777215))
@@ -174,7 +168,7 @@ class Ui_Form(object):
 
         self.horizontalLayout_3.addWidget(self.push_button_add_box_width)
 
-        self.push_button_reduce_box_width = QPushButton(self.widget_middle)
+        self.push_button_reduce_box_width = QPushButton(self.widget_middle_width)
         self.push_button_reduce_box_width.setObjectName(u"push_button_reduce_box_width")
         self.push_button_reduce_box_width.setMinimumSize(QSize(0, 20))
         self.push_button_reduce_box_width.setMaximumSize(QSize(16777215, 16777215))
@@ -194,11 +188,63 @@ class Ui_Form(object):
         self.gridLayout_6.addLayout(self.horizontalLayout_3, 1, 1, 1, 1)
 
 
-        self.horizontalLayout_5.addWidget(self.widget_middle)
+        self.horizontalLayout_5.addWidget(self.widget_middle_width)
+
+        self.widget_middle_height = QWidget(self.widget_menu_manager)
+        self.widget_middle_height.setObjectName(u"widget_middle_height")
+        self.widget_middle_height.setMinimumSize(QSize(200, 0))
+        self.widget_middle_height.setStyleSheet(u"QWidget {\n"
+"border-style: solid;\n"
+"border-radius: 10px;\n"
+"border: 1px solid white;\n"
+"background-color:rgba(255, 255, 255, 200);\n"
+"}")
+        self.gridLayout_10 = QGridLayout(self.widget_middle_height)
+        self.gridLayout_10.setObjectName(u"gridLayout_10")
+        self.gridLayout_10.setContentsMargins(4, 4, 4, 4)
+        self.horizontalLayout_7 = QHBoxLayout()
+        self.horizontalLayout_7.setObjectName(u"horizontalLayout_7")
+        self.push_button_add_box_height = QPushButton(self.widget_middle_height)
+        self.push_button_add_box_height.setObjectName(u"push_button_add_box_height")
+        self.push_button_add_box_height.setMinimumSize(QSize(0, 20))
+        self.push_button_add_box_height.setMaximumSize(QSize(16777215, 16777215))
+        self.push_button_add_box_height.setStyleSheet(u"QPushButton {\n"
+"border-radius: 10px;\n"
+"border: none;\n"
+"background: rgba(0, 0, 0, 0);\n"
+"text-align:center;\n"
+"}\n"
+"QPushButton:hover {\n"
+"font-weight: bold;\n"
+"}")
+
+        self.horizontalLayout_7.addWidget(self.push_button_add_box_height)
+
+        self.push_button_reduce_box_height = QPushButton(self.widget_middle_height)
+        self.push_button_reduce_box_height.setObjectName(u"push_button_reduce_box_height")
+        self.push_button_reduce_box_height.setMinimumSize(QSize(0, 20))
+        self.push_button_reduce_box_height.setMaximumSize(QSize(16777215, 16777215))
+        self.push_button_reduce_box_height.setStyleSheet(u"QPushButton {\n"
+"border-radius: 10px;\n"
+"border: none;\n"
+"background: rgba(0, 0, 0, 0);\n"
+"text-align:center;\n"
+"}\n"
+"QPushButton:hover {\n"
+"font-weight: bold;\n"
+"}")
+
+        self.horizontalLayout_7.addWidget(self.push_button_reduce_box_height)
+
+
+        self.gridLayout_10.addLayout(self.horizontalLayout_7, 1, 1, 1, 1)
+
+
+        self.horizontalLayout_5.addWidget(self.widget_middle_height)
 
         self.widget_left = QWidget(self.widget_menu_manager)
         self.widget_left.setObjectName(u"widget_left")
-        self.widget_left.setMinimumSize(QSize(90, 0))
+        self.widget_left.setMinimumSize(QSize(120, 0))
         self.widget_left.setStyleSheet(u"QWidget {\n"
 "border-style: solid;\n"
 "border-radius: 10px;\n"
@@ -281,28 +327,27 @@ class Ui_Form(object):
 
         self.manage_card_layout.addWidget(self.widget_menu_manager)
 
+        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.manage_card_layout.addItem(self.verticalSpacer)
+
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout.addItem(self.horizontalSpacer)
 
-        self.widget = QWidget(Form)
-        self.widget.setObjectName(u"widget")
-        self.widget.setMinimumSize(QSize(0, 0))
-        self.widget.setFont(font)
-        self.widget.setStyleSheet(u"QWidget {\n"
-"    border-style: solid;\n"
-"    border-radius: 10px;\n"
-"    border: 0px solid black;\n"
-"    color: rgb(0, 0, 0);\n"
-"    border-color: rgba(255, 255, 255, 1);\n"
-"    background-color: rgba(0, 0, 0,25);\n"
-"}")
-        self.gridLayout = QGridLayout(self.widget)
-        self.gridLayout.setObjectName(u"gridLayout")
-        self.graphicsView = QGraphicsView(self.widget)
+        self.panel_scroll_area = QScrollArea(Form)
+        self.panel_scroll_area.setObjectName(u"panel_scroll_area")
+        self.panel_scroll_area.setMinimumSize(QSize(100, 100))
+        self.panel_scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+        self.panel_scroll_area.setWidgetResizable(True)
+        self.panel_widget = QWidget()
+        self.panel_widget.setObjectName(u"panel_widget")
+        self.panel_widget.setGeometry(QRect(0, 0, 263, 241))
+        self.graphicsView = QGraphicsView(self.panel_widget)
         self.graphicsView.setObjectName(u"graphicsView")
+        self.graphicsView.setGeometry(QRect(10, 10, 213, 203))
         self.graphicsView.setMinimumSize(QSize(0, 0))
         self.graphicsView.setStyleSheet(u"QWidget {\n"
 "    border-style: solid;\n"
@@ -312,11 +357,9 @@ class Ui_Form(object):
 "    border-color: rgba(255, 255, 255, 1);\n"
 "    background-color: rgba(255, 255, 255,0);\n"
 "}")
+        self.panel_scroll_area.setWidget(self.panel_widget)
 
-        self.gridLayout.addWidget(self.graphicsView, 1, 0, 1, 1)
-
-
-        self.horizontalLayout.addWidget(self.widget)
+        self.horizontalLayout.addWidget(self.panel_scroll_area)
 
         self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
@@ -330,10 +373,7 @@ class Ui_Form(object):
         self.manage_card_layout.addItem(self.verticalSpacer_2)
 
 
-        self.main_card_layout.addLayout(self.manage_card_layout)
-
-
-        self.gridLayout_3.addLayout(self.main_card_layout, 0, 0, 1, 1)
+        self.horizontalLayout_8.addLayout(self.manage_card_layout)
 
 
         self.retranslateUi(Form)
@@ -347,7 +387,9 @@ class Ui_Form(object):
         self.label_2.setText(QCoreApplication.translate("Form", u"\u5361\u7247\u8bbe\u8ba1\uff1a", None))
         self.push_button_add_box_width.setText(QCoreApplication.translate("Form", u"\u5e03\u5c40\u53d8\u5bbd", None))
         self.push_button_reduce_box_width.setText(QCoreApplication.translate("Form", u"\u5e03\u5c40\u53d8\u7a84", None))
-        self.delete_btn.setText(QCoreApplication.translate("Form", u"\u5220\u9664\u9009\u4e2d", None))
+        self.push_button_add_box_height.setText(QCoreApplication.translate("Form", u"\u5e03\u5c40\u53d8\u9ad8", None))
+        self.push_button_reduce_box_height.setText(QCoreApplication.translate("Form", u"\u5e03\u5c40\u53d8\u77ee", None))
+        self.delete_btn.setText(QCoreApplication.translate("Form", u"\u5220\u9664\u9009\u4e2d\u5361\u7247", None))
         self.push_button_ok.setText(QCoreApplication.translate("Form", u"\u786e\u5b9a", None))
     # retranslateUi
 

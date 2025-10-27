@@ -93,19 +93,21 @@ class SettingCard(MainCard):
             [self.parent.push_button_setting_screen, "界面设置", "Components", "page", None, None],
             [self.parent.push_button_setting_theme, "主题设置", "Clothes", "theme", None, None],
             # [self.parent.push_button_setting_file, "文件管理", "Office", "folder-open", None, None],
-            # 问题和更新
+            # 更新和协议
             [self.parent.push_button_setting_version_info, "版本信息", "Communicate", "message", None, None],
             [self.parent.push_button_setting_version, "检查更新", "Base", "refresh", None, None],
-            [self.parent.push_button_setting_ticket, "会员工单", "Money", "transaction", None, None],
-            [self.parent.push_button_setting_feedback_opinion, "意见反馈", "Hands", "concept-sharing", None, None],
-            # 关于
-            [self.parent.push_button_setting_faq, "常见问题", "Character", "help", None, None],
             [self.parent.push_button_setting_service_agreement, "用户协议", "Office", "agreement", None, None],
             [self.parent.push_button_setting_privacy_agreement, "隐私协议", "Peoples", "personal-privacy", None, None],
-            [self.parent.push_button_setting_about_us, "关于我们", "Character", "info", None, None],
+            # 问题和反馈
+            [self.parent.push_button_setting_qq_grop, "QQ交流群", "Brand", "tencent-qq", None, None],
+            [self.parent.push_button_setting_faq, "常见问题", "Character", "help", None, None],
+            [self.parent.push_button_setting_ticket, "会员工单", "Money", "transaction", None, None],
+            [self.parent.push_button_setting_feedback_opinion, "意见反馈", "Hands", "concept-sharing", None, None],
             # 开源
             [self.parent.push_button_setting_open_source_link, "开源地址", "Brand", "github-one", None, None],
             [self.parent.push_button_setting_open_source_list, "开源许可", "Others", "certificate", None, None],
+            [self.parent.push_button_setting_official_website, "官方网站", "Base", "home", None, None],
+            [self.parent.push_button_setting_about_us, "关于我们", "Character", "info", None, None],
         ]
 
     def init_ui(self):
@@ -138,19 +140,21 @@ class SettingCard(MainCard):
         self.parent.push_button_setting_theme.clicked.connect(self.push_button_setting_theme_click)
         self.parent.push_button_setting_system.clicked.connect(self.push_button_setting_system_click)
         self.parent.push_button_setting_screen.clicked.connect(self.push_button_setting_screen_click)
-        # 问题和更新
+        # 更新和协议
         self.parent.push_button_setting_version_info.clicked.connect(self.push_button_setting_version_info_click)
         self.parent.push_button_setting_version.clicked.connect(self.push_button_setting_version_click)
-        self.parent.push_button_setting_ticket.clicked.connect(self.push_button_setting_ticket_click)
-        self.parent.push_button_setting_feedback_opinion.clicked.connect(self.push_button_setting_feedback_opinion_click)
-        # 关于
-        self.parent.push_button_setting_faq.clicked.connect(self.push_button_setting_faq_click)
         self.parent.push_button_setting_service_agreement.clicked.connect(self.push_button_setting_service_agreement_click)
         self.parent.push_button_setting_privacy_agreement.clicked.connect(self.push_button_setting_privacy_agreement_click)
-        self.parent.push_button_setting_about_us.clicked.connect(self.push_button_setting_about_us_click)
+        # 问题和反馈
+        self.parent.push_button_setting_qq_grop.clicked.connect(self.push_button_setting_qq_grop_click)
+        self.parent.push_button_setting_faq.clicked.connect(self.push_button_setting_faq_click)
+        self.parent.push_button_setting_ticket.clicked.connect(self.push_button_setting_ticket_click)
+        self.parent.push_button_setting_feedback_opinion.clicked.connect(self.push_button_setting_feedback_opinion_click)
         # 开源
         self.parent.push_button_setting_open_source_link.clicked.connect(self.push_button_setting_open_source_link_click)
         self.parent.push_button_setting_open_source_list.clicked.connect(self.push_button_setting_open_source_list_click)
+        self.parent.push_button_setting_official_website.clicked.connect(self.push_button_setting_official_website_click)
+        self.parent.push_button_setting_about_us.clicked.connect(self.push_button_setting_about_us_click)
         # 设置快捷键
         self.main_object.keyboard_re_init()
 
@@ -297,6 +301,14 @@ class SettingCard(MainCard):
         except Exception as e:
             print(f"设置界面:{e}")
 
+    def push_button_setting_qq_grop_click(self):
+        from src.module.QQGrop.qq_grop import QQGropWindow
+        self.toolkit.resolution_util.out_animation(self.main_object)
+        self.setting_qq_grop_win = QQGropWindow(None, self.main_object)
+        self.setting_qq_grop_win.refresh_geometry(self.toolkit.resolution_util.get_screen(self.main_object))
+        # self.setting_qq_grop_win.set_top()
+        self.setting_qq_grop_win.show()
+
     def push_button_setting_faq_click(self):
         self.toolkit.resolution_util.out_animation(self.main_object)
         browser_util.open_url(common.help_url)
@@ -321,6 +333,10 @@ class SettingCard(MainCard):
             "longText": True,
             "markdown": True
         })
+
+    def push_button_setting_official_website_click(self):
+        self.toolkit.resolution_util.out_animation(self.main_object)
+        browser_util.open_url(common.index_url)
 
     def push_button_setting_about_us_click(self):
         from src.module.About.about_us import AboutUsWindow
@@ -397,7 +413,7 @@ class SettingCard(MainCard):
             self.toolkit.message_box_util.box_information(
                 self.main_object,
                 "更新失败",
-                "检查更新失败，请检查网络连接"
+                "检查更新失败，请检查网络连接或稍后重试，也可以直接加QQ群反馈问题：725814322"
             )
             return
 
@@ -506,7 +522,7 @@ class SettingCard(MainCard):
             self.toolkit.message_box_util.box_information(
                 self.main_object,
                 "更新失败",
-                "下载更新包失败，请检查网络连接或稍后重试"
+                "下载更新包失败，请检查网络连接或稍后重试，也可以直接加QQ群反馈问题：725814322"
             )
 
     def _replace_exe_and_restart(self, new_exe_path, update_info):
@@ -519,7 +535,7 @@ class SettingCard(MainCard):
             message_box_util.box_information(
                 self.main_object,
                 "错误",
-                "更新失败，您可以在官网下载安装最新版本。"
+                "更新失败，您可以在官网下载安装最新版本，也可以直接加QQ群反馈问题：725814322"
             )
             self.main_object.agree_update = False
             self.main_object.update_ready.emit()
@@ -551,7 +567,7 @@ class SettingCard(MainCard):
             message_box_util.box_information(
                 self.main_object,
                 "错误",
-                "更新失败，您可以在官网下载安装最新版本。"
+                "更新失败，您可以在官网下载安装最新版本，也可以直接加QQ群反馈问题：725814322"
             )
             self.main_object.agree_update = False
             self.main_object.update_ready.emit()

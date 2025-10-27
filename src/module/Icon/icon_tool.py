@@ -21,8 +21,11 @@ def set_tray_menu(main_object):
     menu.addAction(QAction(u'打开官网', main_object, icon=style_util.get_icon_by_path("Base/home"), triggered=open_index_url))
     menu.addAction(QAction(u'开源地址', main_object, icon=style_util.get_icon_by_path("Brand/github-one"), triggered=open_open_source_url))
     menu.addSeparator()
-    menu.addAction(QAction(u'用户协议', main_object, icon=style_util.get_icon_by_path("Office/agreement"), triggered=open_user_agreement_url))
-    menu.addAction(QAction(u'隐私政策', main_object, icon=style_util.get_icon_by_path("Peoples/personal-privacy"), triggered=open_privacy_policy_url))
+    menu.addAction(QAction(u'QQ交流群', main_object, icon=style_util.get_icon_by_path("Brand/tencent-qq"), triggered=lambda : open_qq_grop_url(main_object)))
+    menu.addAction(QAction(u'常见问题', main_object, icon=style_util.get_icon_by_path("Character/help"), triggered=open_help_url))
+    # menu.addSeparator()
+    # menu.addAction(QAction(u'用户协议', main_object, icon=style_util.get_icon_by_path("Office/agreement"), triggered=open_user_agreement_url))
+    # menu.addAction(QAction(u'隐私政策', main_object, icon=style_util.get_icon_by_path("Peoples/personal-privacy"), triggered=open_privacy_policy_url))
     menu.addSeparator()
     menu.addAction(QAction(u'版本信息', main_object, icon=style_util.get_icon_by_path("Communicate/message"), triggered=main_object.open_update_view))
     menu.addAction(QAction(u'关于我们', main_object, icon=style_util.get_icon_by_path("Character/info"), triggered=lambda : open_about_us_url(main_object)))
@@ -69,6 +72,9 @@ def set_tray_icon(main_object):
 def hide_tray_icon_menu(main_object):
     main_object.tray_icon.contextMenu().hide()
 
+def open_help_url():
+    browser_util.open_url(common.help_url)
+
 def open_index_url():
     browser_util.open_url(common.index_url)
 
@@ -87,3 +93,10 @@ def open_about_us_url(main_object):
     main_object.setting_about_us_win = AboutUsWindow(None, main_object)
     main_object.setting_about_us_win.refresh_geometry(main_object.toolkit.resolution_util.get_screen(main_object))
     main_object.setting_about_us_win.show()
+
+def open_qq_grop_url(main_object):
+    # 不能放到上面引用，否则会报错
+    from src.module.QQGrop.qq_grop import QQGropWindow
+    main_object.setting_qq_grop_win = QQGropWindow(None, main_object)
+    main_object.setting_qq_grop_win.refresh_geometry(main_object.toolkit.resolution_util.get_screen(main_object))
+    main_object.setting_qq_grop_win.show()
