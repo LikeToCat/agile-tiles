@@ -4,8 +4,7 @@ from functools import partial
 from PySide6 import QtGui, QtCore
 from PySide6.QtCore import QObject, Qt, QSize, QRect, QTimer
 from PySide6.QtGui import QIcon, QFont, QCursor, QAction
-from PySide6.QtWidgets import QLabel, QWidget, QPushButton, QVBoxLayout, QHBoxLayout, QScrollArea, QFrame, QMenu, \
-    QToolButton, QApplication
+from PySide6.QtWidgets import QLabel, QWidget, QPushButton, QVBoxLayout, QHBoxLayout, QScrollArea, QFrame, QMenu, QToolButton
 
 from src.card.card_component.ThemeSwitchButton.ThemeSwitchButton import ThemeSwitchButton
 from src.card.main_card.FileSearchCard.FileSearchCard import FileSearchCard
@@ -25,7 +24,6 @@ from src.client import common
 from src.constant import card_constant, data_save_constant
 from src.module.Theme import theme_module
 from src.module.UserData.DataBase import user_data_common
-from src.module.About.about_us import AboutUsWindow
 from src.util import browser_util
 from src.ui import style_util
 
@@ -165,7 +163,7 @@ class MainCardManager(QObject):
             "tool": [self.main_object.push_button_tool, "Others/toolkit", self.main_object.tool_area, "工具箱"],
             "looking": [self.main_object.push_button_looking, "Base/preview-open", self.main_object.looking_area, "信息聚合"],
             "search": [self.main_object.push_button_search, "Base/search", self.main_object.search_area, "本地搜索"],
-            "ipn": [self.main_object.push_button_ipn, "Arrows/transfer-data", self.main_object.ipn_area, "局域网文件传输"],
+            "ipn": [self.main_object.push_button_ipn, "Office/file-conversion-one", self.main_object.ipn_area, "局域网文件传输"],
             "todo": [self.main_object.push_button_todo, "Edit/plan", self.main_object.todo_area, "待办事项"],
             "book": [self.main_object.push_button_book, "Office/book-one", self.main_object.book_area, "阅读"],
             "music": [self.main_object.push_button_music, "Music/music-one", self.main_object.music_area, "音乐"],
@@ -705,13 +703,13 @@ class MainCardManager(QObject):
         self.main_object.push_button_header_title.setCursor(QCursor(Qt.PointingHandCursor))     # 鼠标手形
         self.main_object.layout_header.addWidget(self.main_object.push_button_header_title)
         # 导航栏中间暂时用QLabel放置信息
-        self.main_object.layout_header.addStretch()
-        self.main_object.push_button_header_info = QPushButton()
+        # self.main_object.layout_header.addStretch()
+        self.main_object.push_button_header_info = QLabel()
         self.main_object.push_button_header_info.setObjectName(u"push_button_header_info")
         self.main_object.push_button_header_info.setText("")
-        self.main_object.push_button_header_info.setCursor(QCursor(Qt.PointingHandCursor))     # 鼠标手形
-        self.main_object.layout_header.addWidget(self.main_object.push_button_header_info)
-        self.main_object.layout_header.addStretch()
+        self.main_object.push_button_header_info.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.main_object.layout_header.addWidget(self.main_object.push_button_header_info, stretch=1)
+        # self.main_object.layout_header.addStretch()
         # 右侧第一个是退出按钮
         # self.main_object.push_button_header_exit = QPushButton()
         # self.main_object.push_button_header_exit.setObjectName(u"push_button_header_exit")
@@ -779,7 +777,7 @@ class MainCardManager(QObject):
         self.main_object.layout_header.addWidget(self.main_object.push_button_hide_window)
         # 点击事件
         self.main_object.push_button_header_title.clicked.connect(partial(self.click_header_title_button))
-        self.main_object.push_button_header_info.clicked.connect(partial(self.push_button_login_click))
+        # self.main_object.push_button_header_info.clicked.connect(partial(self.push_button_login_click))
         # self.main_object.push_button_header_exit.clicked.connect(partial(self.main_object.quit_before,  False))
         # self.main_object.push_button_screenshot.clicked.connect(
         #     partial(self.main_object.toolkit.image_util.screenshot, self.main_object))
@@ -1089,14 +1087,13 @@ class MainCardManager(QObject):
                 .replace("QPushButton", "QToolButton") + "QToolButton::menu-indicator {image: none;}"
             )
             self.main_object.push_button_header_info.setStyleSheet("""
-            QPushButton {
-                background-color: rgba(34, 34, 34, 255);
+            QLabel {
+                background-color: transparent;
                 padding: 5px;
-                border-radius: 8px;
-                color: rgb(245, 61, 79);
+                color: rgba(125, 125, 125, 100);
             }
-            QPushButton:hover {
-                color: red;
+            QLabel:hover {
+                color: rgba(255, 255, 255, 200);
             }
             """)
         else:
@@ -1108,14 +1105,13 @@ class MainCardManager(QObject):
                 .replace("QPushButton", "QToolButton") + "QToolButton::menu-indicator {image: none;}"
             )
             self.main_object.push_button_header_info.setStyleSheet("""
-            QPushButton {
-                background-color: rgba(255, 255, 255, 100);
+            QLabel {
+                background-color: transparent;
                 padding: 5px;
-                border-radius: 8px;
-                color: rgb(245, 61, 79);
+                color: rgba(125, 125, 125, 100);
             }
-            QPushButton:hover {
-                color: red;
+            QLabel:hover {
+                color: rgba(0, 0, 0, 200);
             }
             """)
         # 应用顶部更多按钮的菜单样式
@@ -1214,6 +1210,7 @@ class MainCardManager(QObject):
         browser_util.open_url(common.index_url)
 
     def open_about_us_url(self):
+        from src.module.About.about_us import AboutUsWindow
         self.main_object.setting_about_us_win = AboutUsWindow(None, self.main_object)
         self.main_object.setting_about_us_win.refresh_geometry(self.main_object.toolkit.resolution_util.get_screen(self.main_object))
         self.main_object.setting_about_us_win.show()

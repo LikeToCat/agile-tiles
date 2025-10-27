@@ -35,7 +35,7 @@ def handle_silent_update_result(main_object, success, update_info, tag):
         message_box_util.box_information(
             main_object,
             "更新失败",
-            "获取云端版本失败，请检查网络连接或稍后重试"
+            "获取云端版本失败，请检查网络连接或稍后重试，也可以直接加QQ群反馈问题：725814322"
         )
         main_object.agree_update = False
         main_object.update_ready.emit()
@@ -189,7 +189,7 @@ def handle_download_finished(main_object, success, update_info):
         message_box_util.box_information(
             main_object,
             "更新失败",
-            "下载更新包失败，请检查网络连接或稍后重试"
+            "下载更新包失败，请检查网络连接或稍后重试，也可以直接加QQ群反馈问题：725814322"
         )
         main_object.agree_update = False
         main_object.update_ready.emit()
@@ -204,7 +204,7 @@ def replace_exe_and_restart(main_object, new_exe_path, update_info):
         message_box_util.box_information(
             main_object,
             "错误",
-            "更新失败，您可以在官网下载安装最新版本。"
+            "更新失败，您可以在官网下载安装最新版本，也可以直接加QQ群反馈问题：725814322"
         )
         main_object.agree_update = False
         main_object.update_ready.emit()
@@ -237,7 +237,7 @@ def run_installer_and_exit(main_object, exe_path):
         message_box_util.box_information(
             main_object,
             "错误",
-            "更新失败，您可以在官网下载安装最新版本。"
+            "更新失败，您可以在官网下载安装最新版本，也可以直接加QQ群反馈问题：725814322"
         )
         main_object.agree_update = False
         main_object.update_ready.emit()

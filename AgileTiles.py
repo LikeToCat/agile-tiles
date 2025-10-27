@@ -6,35 +6,22 @@ import os, sys
 import atexit
 import subprocess
 import time, datetime
-
-# 忽略PyDevd的错误
-os.environ['PYDEVD_DISABLE_FILE_VALIDATION'] = '1'
-
 print("_基础包加载完成")
 # 资源包
-import compiled_resources
+import resources_qrc.compiled_resources
 print("_资源包加载完成")
-# 管理员权限(现在取消)
-import ctypes
 # 错误日志
 import traceback
-# 内存控制
-import gc
-# 内存跟踪 & 内存诊断
-import tracemalloc
-import faulthandler
-print("_日志和调试分析包加载完成")
 # 热键监听
 from ctypes.wintypes import MSG
 print("_热键监听包加载完成")
 # 基础界面框架
-from PySide6 import QtCore
+from PySide6 import QtGui
 from PySide6.QtGui import QPixmap, QFont
-from PySide6.QtCore import QEvent, Qt, qInstallMessageHandler, QSettings, Signal, QEventLoop, Q_ARG, Slot, \
-    QMetaObject, QTimer, QSharedMemory
+from PySide6.QtCore import QEvent, Qt, QSettings, Signal, QEventLoop, Q_ARG, Slot, \
+    QMetaObject, QTimer, QSharedMemory, QPoint
 from PySide6.QtWidgets import QApplication, QSystemTrayIcon, QStyleFactory
 from PySide6.QtNetwork import QLocalServer, QLocalSocket, QNetworkDiskCache, QNetworkReply
-
 print("_基础界面框架加载完成")
 # 我的界面内容
 from baby7_desktop_tool_form import Ui_Form
@@ -44,12 +31,9 @@ from src.card.NormalCardManager.NormalCardManager import NormalCardManager
 from src.card.MainCardManager.MainCardManager import MainCardManager
 print("_卡片管理加载完成")
 # 窗口工具
-from src.my_component.TutorialWindow.TutorialWindow import TutorialWindow
 from src.my_component.MainAcrylicWindow.MainAcrylicWindow import MainAcrylicWindow
 from src.my_component.ImageCacheManager.ImageCacheManager import ImageCacheManager
-from src.my_component.Neumorphism import QtWidgets, QtGui
 from src.my_component.GlobalHotkeyManager import GlobalHotkeyManager
-from src.my_component.TopImageAcrylicWindow import TopImageAcrylicWindow
 print("_窗口工具包加载完成")
 # 模块
 from src.module import init_module, dialog_module
@@ -59,10 +43,6 @@ from src.module.Theme import theme_module
 from src.module.Screen import screen_module
 from src.module.User import user_module
 from src.module.Updater import update_module
-from src.module.ColorPicker import color_converter_util
-from src.module.ColorPicker.ColorPickerWidget import ScreenColorPicker
-from src.module.ImageToExcel import image_to_excel_converter_util, single_image_to_excel_converter_util
-from src.module.Screenshot.ScreenshotWidget import ScreenshotWidget
 from src.module.UserData.Sync.data_client import DataClient
 from src.module.User.user_client import UserClient
 from src.module.Login.start_login import StartLoginWindow
@@ -76,64 +56,10 @@ print("_线程包加载完成")
 from src.ui import style_util
 from src.util.Toolkit import Toolkit
 from src.util import main_data_compare, hardware_id_util, winreg_util
-
 print("_工具包加载完成")
 # 静态常量
 from src.constant import data_save_constant, card_constant, version_constant
 print("_静态常量加载完成")
-
-# 捕获Qt的日志
-def qt_message_handler(mode, context, message):
-    if "stun" in message.lower() or "dns" in message.lower():
-        print(f"[Qt Network] mode: {mode}, context: {context}, message: {message}")
-qInstallMessageHandler(qt_message_handler)
-print("_捕获Qt的日志完成")
-
-# 获取当前阈值
-current_thresholds = gc.get_threshold()
-print(f"默认GC配置: {current_thresholds}")  # 默认通常是(700, 10, 10)
-# 设置新的阈值
-gc.set_threshold(2000, 30, 20) # 设置 threshold0=1000, threshold1=15, threshold2=10
-# 再次获取确认设置生效
-new_thresholds = gc.get_threshold()
-print(f"新的GC配置: {new_thresholds}")
-
-# # 暂停垃圾回收
-# gc.disable()
-# # 验证垃圾回收是否已关闭
-# if not gc.isenabled():  # 检查垃圾回收机制是否被禁用
-#     print("垃圾回收已关闭。")
-# else:
-#     print("垃圾回收仍然开启。")
-
-
-def handleException(exc_type, exc_value, exc_traceback):
-    '''
-    使用方法在入口位置,最开始位置(sys.exit(app.exec_())之前 )加入这一行
-    sys.excepthook = handle_exception
-    类似：import cgitb
-        cgitb.enable(format='txt')
-    Args:
-        exc_type:
-        exc_value:
-        exc_traceback:
-
-    Returns:
-    '''
-    if issubclass(exc_type, KeyboardInterrupt):
-        return sys.__excepthook__(exc_type, exc_value, exc_traceback)
-    exception = str("".join(traceback.format_exception(
-        exc_type, exc_value, exc_traceback)))
-    dialog = QtWidgets.QDialog()
-    # close对其进行删除操作
-    dialog.setAttribute(QtCore.Qt.WA_DeleteOnClose)
-    msg = QtWidgets.QMessageBox(dialog)
-    msg.setIcon(QtWidgets.QMessageBox.Critical)
-    msg.setText('程序异常,请尝试重启或联系管理员!')
-    msg.setWindowTitle("系统异常提示请尝试重启")
-    msg.setDetailedText(exception)
-    msg.setStandardButtons(QtWidgets.QMessageBox.Ok)
-    msg.exec()
 
 
 def is_another_instance_running():
@@ -175,6 +101,13 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
     sys_icon = None                         # 图标文件(QIcon)
     sys_icon_pixmap = None                  # 图标文件(QPixmap)
     info_logger = None                      # 日志
+    # 窗口移动相关参数
+    dragging = False
+    drag_position = QPoint()
+    scale_factor = 1.0
+    resize_edge = None  # 用于跟踪当前调整大小的边缘
+    resize_start_pos = None
+    resize_start_geometry = None
     # 设备id
     hardware_id = None
     os_version = None
@@ -297,7 +230,7 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
         # 网络缓存
         self.network_disk_cache = QNetworkDiskCache(self)
         self.network_disk_cache.setCacheDirectory(self.app_data_network_path)
-        self.network_disk_cache.setMaximumCacheSize(100 * 1024 * 1024)    # 设置缓存大小（单位：字节） 例如 100 MB
+        self.network_disk_cache.setMaximumCacheSize(10 * 1024 * 1024)    # 设置缓存大小（单位：字节） 例如 10 MB
         # ***************** 更新检测 *****************
         # 创建本地事件循环
         update_loop = QEventLoop()
@@ -320,6 +253,13 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
         self.load_data()
         # 阻塞等待数据就绪
         login_loop.exec()
+        # 删除相关
+        if self.start_user_info_client is not None:
+            self.start_user_info_client.deleteLater()
+            self.start_user_info_client = None
+        if self.start_user_data_client is not None:
+            self.start_user_data_client.deleteLater()
+            self.start_user_data_client = None
         # ***************** 卡片检测 *****************
         # 创建本地事件循环
         card_loop = QEventLoop()
@@ -329,6 +269,9 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
         self.check_card_run()
         # 阻塞等待数据就绪
         card_loop.exec()
+        # 删除card_manager
+        self.card_manager.deleteLater()
+        self.card_manager = None
         # **************** 后续初始化 ****************
         # 同步初始化UI
         self.atomic_init()
@@ -343,12 +286,6 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
             self.do_login_again()
 
     def atomic_init(self):
-        # 启用faulthandler（仅在stderr可用时）
-        try:
-            if sys.stderr is not None:
-                faulthandler.enable()
-        except Exception:
-            pass
         # 初始化分辨率参数、位置和大小
         screen_module.init_resolution(self, out_animation_tag=False)
         # 初始化主题
@@ -433,7 +370,6 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
         self.widget_header.show()
         # 判断用户是否登录
         if self.current_user['username'] == "LocalUser":
-            self.push_button_header_info.setText("未登录状态不存储数据！")
             self.push_button_area_user_login.show()
             self.push_button_area_user_vip_subscription.hide()
             self.push_button_area_user_vip_subscription_history.hide()
@@ -441,8 +377,10 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
             self.push_button_area_user_message_logout.hide()
             self.label_area_user_message_logout.hide()
         else:
-            self.push_button_header_info.hide()
             self.push_button_area_user_login.hide()
+        # 顶部信息按钮隐藏
+        self.push_button_header_info.setText("点击这里拖拽移动")
+        self.push_button_header_info.show()
         # 菜单栏显示
         self.label_menu.show()
         # 小卡片管理显示
@@ -491,8 +429,14 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
             # 设置主题到QSetting
             settings = QSettings(self.app_name, "Theme")
             settings.setValue("IsDark", self.is_dark)
+        # 注销登录前获取用户名
+        user_name = None
+        if self.current_user is not None and "username" in self.current_user:
+            user_name = self.current_user["username"]
+            if user_name == "LocalUser":
+                user_name = None
         # 显示登录窗口
-        self.single_login_tip_dialog = StartLoginWindow(None, self)
+        self.single_login_tip_dialog = StartLoginWindow(None, self, user_name=user_name)
         self.single_login_tip_dialog.refresh_geometry(self.toolkit.resolution_util.get_screen(self))
         self.single_login_tip_dialog.show()
 
@@ -600,11 +544,17 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
                 print(result)
                 print(f"登录失败，原因：{result['msg']}")
                 self.toolkit.message_box_util.box_information(self, "错误信息", "登录失败，请重新登录")
+                # 注销登录前获取用户名
+                user_name = None
+                if self.current_user is not None and "username" in self.current_user:
+                    user_name = self.current_user["username"]
+                    if user_name == "LocalUser":
+                        user_name = None
                 # 注销登录
                 self.database_manager.logout_user()
                 self.current_user = None
                 # 打开登录窗口手动登录
-                self.show_start_login_window()
+                self.show_start_login_window(user_name)
                 # 判断用户是否登录，未登录则退出程序
                 self.current_user = self.database_manager.get_current_user()
                 if self.current_user is None or self.login_restart_data is None:
@@ -651,14 +601,14 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
             print(f"_safe_do_refresh error: {str(e)}")
         self.login_restart_data = None
 
-    def show_start_login_window(self):
+    def show_start_login_window(self, user_name=None):
         self.start_login_view = True
         if not self.is_first:
             # 设置主题到QSetting
             settings = QSettings(self.app_name, "Theme")
             settings.setValue("IsDark", self.is_dark)
         # 显示登录窗口
-        self.user_server_recover_win = StartLoginWindow(None, self)
+        self.user_server_recover_win = StartLoginWindow(None, self, user_name=user_name)
         self.user_server_recover_win.refresh_geometry(self.toolkit.resolution_util.get_screen(self))
         self.user_server_recover_win.exec()
         self.start_login_view = False
@@ -913,6 +863,12 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
             try:
                 # 隐藏窗口
                 self.hide()
+                # 注销登录前获取用户名
+                user_name = None
+                if self.current_user is not None and "username" in self.current_user:
+                    user_name = self.current_user["username"]
+                    if user_name == "LocalUser":
+                        user_name = None
                 # 消除登录状态
                 self.user_data_status = "logout"
                 self.is_login = False
@@ -926,7 +882,7 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
                 # 登出前的操作
                 self.do_logout()
                 # 启动登录窗口
-                self.show_start_login_window()
+                self.show_start_login_window(user_name)
             except Exception as e:
                 self.info_logger.error(traceback.format_exc())
                 exit()
@@ -1274,7 +1230,9 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
             print("非第一次启动，不显示引导程序")
 
     def show_tutorial(self):
+        from src.my_component.TutorialWindow.TutorialWindow import TutorialWindow
         self.tutorial = TutorialWindow()
+        import resources_qrc.tutorial_resources
         # 添加引导步骤图片（替换为实际路径）
         self.tutorial.add_step(":static/img/tutorial/tutorial_1.png")
         self.tutorial.add_step(":static/img/tutorial/tutorial_2.png")
@@ -1486,6 +1444,81 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
         if hasattr(self, "header_more_menu"):
             self.header_more_menu.hide()
 
+    ''' **********************************鼠标监听拖拽*************************************** '''
+    def mousePressEvent(self, event):
+        if event.button() == Qt.LeftButton:
+            # 如果不在上方self.widget_header导航条区域内则不进行拖拽
+            if not self.widget_header.geometry().contains(event.position().toPoint()):
+                event.accept()
+                return
+            # 开始拖拽
+            self.dragging = True
+            self.drag_position = event.globalPosition().toPoint() - self.frameGeometry().topLeft()
+            event.accept()
+
+    def mouseMoveEvent(self, event):
+        # 处理拖拽
+        if event.buttons() == Qt.LeftButton and self.dragging:
+            self.move(event.globalPosition().toPoint() - self.drag_position)
+            event.accept()
+
+    def mouseReleaseEvent(self, event):
+        if event.button() == Qt.LeftButton:
+            self.dragging = False
+            self.resize_edge = None
+            self.resize_start_pos = None
+            self.resize_start_geometry = None
+            event.accept()
+            # 拖拽结束后判断窗口位置
+            self.check_window_position()
+
+    def check_window_position(self):
+        """判断窗口在屏幕中的位置"""
+        # 获取窗口的几何信息
+        window_geometry = self.frameGeometry()
+        window_center = window_geometry.center()
+        # 获取窗口所在的屏幕
+        screen = self.get_screen_at_point(window_center)
+        if not screen:
+            print("未找到对应的屏幕")
+            return
+        # 获取屏幕的几何信息
+        screen_geometry = screen.geometry()
+        screen_center_x = screen_geometry.center().x()
+        # 判断左右位置
+        if window_center.x() < screen_center_x:
+            position = "Left"
+        else:
+            position = "Right"
+        # 输出位置信息
+        print(f"屏幕: {screen.name()} | 位置: {position}")
+        # 设置新的屏幕和定位
+        self.set_new_screen_and_locate(screen.name(), position)
+
+    def get_screen_at_point(self, point):
+        """获取指定点所在的屏幕"""
+        screens = QApplication.screens()
+        for screen in screens:
+            if screen.geometry().contains(point):
+                return screen
+        return None
+
+    def set_new_screen_and_locate(self, screen_name, locate):
+        # 复制设置数据
+        setting_data = copy.deepcopy(self.main_data["data"]["SettingCard"])
+        setting_data[self.hardware_id]["screenName"] = screen_name
+        setting_data[self.hardware_id]["windowPosition"] = locate
+        # 触发数据更新
+        trigger_type = data_save_constant.TRIGGER_TYPE_SETTING_SCREEN
+        need_upload = True
+        data_type = data_save_constant.DATA_TYPE_ENDURING
+        self.local_trigger_data_update(trigger_type=trigger_type,
+                            need_upload=need_upload,
+                            in_data=setting_data,
+                            data_type=data_type,
+                            card_type=data_save_constant.CARD_TYPE_Big,
+                            card_name=None)
+
     ''' **********************************键盘监听*************************************** '''
     def keyboard_re_init(self):
         # 移除热键
@@ -1586,6 +1619,7 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
         self.show_overlay_status = True
 
     def _show_screenshot_overlay(self):
+        from src.module.Screenshot.ScreenshotWidget import ScreenshotWidget
         self.overlay = ScreenshotWidget(self, self)
         self.overlay.show()
         self.overlay.setFocus(Qt.FocusReason.ActiveWindowFocusReason)  # 强制获取焦点
@@ -1601,6 +1635,7 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
         self.show_overlay_status = True
 
     def _show_color_picker_overlay(self):
+        from src.module.ColorPicker.ColorPickerWidget import ScreenColorPicker
         self.color_picker_overlay = ScreenColorPicker(self, self)
         self.color_picker_overlay.show()
         self.color_picker_overlay.setFocus(Qt.FocusReason.ActiveWindowFocusReason)  # 强制获取焦点
@@ -1624,6 +1659,7 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
                 self.color_converter_dialog = None
             except Exception:
                 pass
+        from src.module.ColorPicker import color_converter_util
         self.color_converter_dialog = color_converter_util.show_color_converter_dialog(self, "颜色转换器", initial_color=color)
 
     def cancel_color_picker(self):
@@ -1661,6 +1697,8 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
                 self.image_to_excel_converter_dialog = None
             except Exception:
                 pass
+
+        from src.module.ImageToExcel import image_to_excel_converter_util
         self.image_to_excel_converter_dialog = image_to_excel_converter_util.show_image_to_excel_converter_dialog(self, "图片批量转Excel")
 
     def start_single_image_to_excel_converter(self, pixmap):
@@ -1671,6 +1709,7 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
                 self.single_image_to_excel_converter_dialog = None
             except Exception:
                 pass
+        from src.module.ImageToExcel import single_image_to_excel_converter_util
         self.single_image_to_excel_converter_dialog = (
             single_image_to_excel_converter_util.show_single_image_to_excel_converter_dialog(self, "图片转Excel", pixmap=pixmap))
 
@@ -1696,6 +1735,7 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
                 pass
         if pixmap is None:
             return
+        from src.my_component.TopImageAcrylicWindow import TopImageAcrylicWindow
         self.top_image_show_dialog = TopImageAcrylicWindow.show_top_image_dialog(self, pixmap=pixmap)
 
 
@@ -1964,8 +2004,6 @@ if __name__ == '__main__':
     # 设置工作目录为应用安装目录来修复开机自启动无法加载图片的问题(sys.frozen用来判断pyinstaller，__compiled__用来判断nuitka)
     if getattr(sys, 'frozen', False) or '__compiled__' in globals():
         os.chdir(os.path.dirname(sys.executable))
-    # 跟踪100个最近内存分配
-    tracemalloc.start(100)
     # 开启DPI适应
     QApplication.setHighDpiScaleFactorRoundingPolicy(Qt.HighDpiScaleFactorRoundingPolicy.PassThrough)
     # 禁用系统代理(不会被Fiddler抓到)
@@ -2009,7 +2047,7 @@ if __name__ == '__main__':
         # 延用旧样式
         app.setStyle(QStyleFactory.create('windowsvista'))
         # 异常处理
-        sys.excepthook = handleException
+        # sys.excepthook = handleException
         # 创建本地服务器用于实例间通信（可选）
         localServer = QLocalServer()
         localServer.listen("AgileTiles")

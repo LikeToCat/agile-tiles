@@ -67,7 +67,7 @@ class CardStore(QtWidgets.QWidget):
         """)
 
         # 主布局
-        main_layout = QtWidgets.QVBoxLayout(self)
+        main_layout = QtWidgets.QVBoxLayout()
         main_layout.setContentsMargins(0, 0, 0, 0)
 
         # 添加顶部搜索栏
@@ -148,6 +148,9 @@ class CardStore(QtWidgets.QWidget):
         self.label_top_mask.raise_()
         self.load_animation.hide()
         self.label_top_mask.hide()
+
+        # 主布局
+        self.setLayout(main_layout)
 
     def set_ui(self):
         print(f"self.width():{self.width()},self.height():{self.height()}")

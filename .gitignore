@@ -151,3 +151,4 @@ test/
 cache/
 plugin/
 temp_updates/
+resources_qrc/*.py

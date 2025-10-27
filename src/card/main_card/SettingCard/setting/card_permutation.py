@@ -2,7 +2,6 @@
 from PySide6.QtCore import Qt, Signal, QDateTime
 
 from src.my_component.AgileTilesAcrylicWindow.AgileTilesAcrylicWindow import AgileTilesAcrylicWindow
-from src.card.main_card.SettingCard.setting.CardPermutation.CardStore import CardStore
 from src.card.main_card.SettingCard.setting.card_permutation_form import Ui_Form
 from src.card.main_card.SettingCard.setting.CardPermutation.CardItemSignals import CardDesignItem
 from src.card.main_card.SettingCard.setting.CardPermutation.GridScene import GridScene
@@ -23,8 +22,9 @@ class CardPermutationWindow(AgileTilesAcrylicWindow, Ui_Form):
     menu_width = 160    # 菜单宽度
     spacing_width = 10  # 间隔宽度
     tab_height = 20
-    # 最大宽度
+    # 最大宽度和高度
     max_panel_width = 12
+    max_panel_height = 24
     # 定义卡片盒子的总宽度和总高度的网格数
     box_card_width = 8  # 盒子的总宽度（列数）
     box_card_height = 13  # 盒子的总高度（行数）
@@ -46,11 +46,15 @@ class CardPermutationWindow(AgileTilesAcrylicWindow, Ui_Form):
     def __init__(self, parent=None, use_parent=None, user_card_list=None, main_config=None):
         super(CardPermutationWindow, self).__init__(is_dark=use_parent.is_dark, form_theme_mode=use_parent.form_theme_mode,
                                                  form_theme_transparency=use_parent.form_theme_transparency)
+        from src.card.main_card.SettingCard.setting.CardPermutation.CardStore import CardStore
         self.parent = parent
         self.use_parent = use_parent
         # 初始化UI
         self.setupUi(self)
+        # 最大化
+        self.showMaximized()
         # 样式初始化
+        self.panel_scroll_area.setStyleSheet("QScrollArea { border: none; background-color: transparent; }" + style_util.scroll_bar_style)
         if self.is_dark:
             self.widget_base.setStyleSheet("""
             QWidget {
@@ -65,26 +69,29 @@ class CardPermutationWindow(AgileTilesAcrylicWindow, Ui_Form):
                 border: none;
                 background-color: rgba(255, 255, 255, 25);
             }"""
-            self.widget.setStyleSheet(widget_style)
+            self.panel_widget.setStyleSheet(widget_style)
             self.widget_menu_manager.setStyleSheet(widget_style)
             self.widget_menu_store.setStyleSheet(widget_style)
             button_bg_style = """
-            QWidget {`
+            QWidget {
                 border-radius: 12px;
                 border: 1px solid black;
                 background-color:rgba(0, 0, 0, 200);
             }"""
             self.widget_left.setStyleSheet(button_bg_style)
-            self.widget_middle.setStyleSheet(button_bg_style)
+            self.widget_middle_width.setStyleSheet(button_bg_style)
+            self.widget_middle_height.setStyleSheet(button_bg_style)
             self.widget_right.setStyleSheet(button_bg_style)
         # 按钮图标初始化
         style_util.set_card_button_style(self.delete_btn, "Edit/delete", is_dark=self.is_dark, style_change=False)
-        style_util.set_card_button_style(self.push_button_add_box_width, "Edit/fullwidth", is_dark=self.is_dark, style_change=False)
-        style_util.set_card_button_style(self.push_button_reduce_box_width, "Edit/link-in", is_dark=self.is_dark, style_change=False)
+        style_util.set_card_button_style(self.push_button_add_box_width, "Edit/expand-left", is_dark=self.is_dark, style_change=False)
+        style_util.set_card_button_style(self.push_button_reduce_box_width, "Edit/expand-right", is_dark=self.is_dark, style_change=False)
+        style_util.set_card_button_style(self.push_button_add_box_height, "Edit/expand-down", is_dark=self.is_dark, style_change=False)
+        style_util.set_card_button_style(self.push_button_reduce_box_height, "Edit/expand-up", is_dark=self.is_dark, style_change=False)
         style_util.set_card_button_style(self.push_button_ok, "Character/check", is_dark=self.is_dark, style_change=False)
         # 布局初始化
-        self.widget_base.setLayout(self.gridLayout_3)
-        self.gridLayout_3.setContentsMargins(10, 10, 10, 10)
+        self.widget_base.setLayout(self.horizontalLayout_8)
+        self.horizontalLayout_8.setContentsMargins(10, 10, 10, 10)
         # 默认禁止右键菜单
         self.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)
         self.parent_user_card_data_list = user_card_list
@@ -106,7 +113,7 @@ class CardPermutationWindow(AgileTilesAcrylicWindow, Ui_Form):
         # 创建商店
         self.add_card_widget = CardStore(self, use_parent=self.use_parent, is_dark=self.is_dark)
         self.add_card_widget.cardAdded.connect(self.auto_add_card)
-        self.layout_card_store.addWidget(self.add_card_widget)
+        self.layout_card_store.addWidget(self.add_card_widget, stretch=1)
         # 调整大小
         self.change_size()
         # 按钮点击事件
@@ -114,10 +121,10 @@ class CardPermutationWindow(AgileTilesAcrylicWindow, Ui_Form):
         self.delete_btn.clicked.connect(self.delete_card)
         self.push_button_add_box_width.clicked.connect(self.push_button_add_box_width_click)
         self.push_button_reduce_box_width.clicked.connect(self.push_button_reduce_box_width_click)
+        self.push_button_add_box_height.clicked.connect(self.push_button_add_box_height_click)
+        self.push_button_reduce_box_height.clicked.connect(self.push_button_reduce_box_height_click)
         # 渲染卡片列表
         self.render_card_list()
-        # 最大化
-        self.showMaximized()
         self.add_card_widget.set_ui()
         # 背景
         self.label_background.resize(self.width(), self.height())
@@ -383,16 +390,26 @@ class CardPermutationWindow(AgileTilesAcrylicWindow, Ui_Form):
         self.graphicsView.setMaximumWidth(box_width)
         self.graphicsView.setMinimumHeight(box_height)
         self.graphicsView.setMaximumHeight(box_height)
-        self.add_card_widget.setMinimumHeight(box_height)
-        self.add_card_widget.setMaximumHeight(box_height)
+        # self.add_card_widget.setMinimumHeight(box_height)
+        # self.add_card_widget.setMaximumHeight(box_height)
         widget_width = box_width + self.spacing_width * 2
         widget_height = box_height + self.spacing_width * 2
-        self.widget.setMinimumWidth(widget_width)
-        self.widget.setMaximumWidth(widget_width)
-        self.widget.setMinimumHeight(widget_height)
-        self.widget.setMaximumHeight(widget_height)
+        self.panel_widget.setMinimumWidth(widget_width)
+        self.panel_widget.setMaximumWidth(widget_width)
+        self.panel_widget.setMinimumHeight(widget_height)
+        self.panel_widget.setMaximumHeight(widget_height)
         self.widget_menu_manager.setMaximumHeight(widget_height)
         self.widget_menu_store.setMaximumHeight(widget_height)
+
+        self.panel_scroll_area.setMinimumWidth(self.panel_widget.width())
+        self.panel_scroll_area.setMaximumWidth(self.panel_widget.width())
+        self.panel_scroll_area.setMinimumHeight(self.panel_widget.height())
+        self.panel_scroll_area.setMaximumHeight(self.panel_widget.height())
+        # if self.panel_scroll_area.height() >= (self.grid_size * 13 + self.spacing_width * 2):
+        #     self.panel_scroll_area.setMinimumWidth(self.panel_widget.width() + self.spacing_width)
+        #     self.panel_scroll_area.setMaximumWidth(self.panel_widget.width() + self.spacing_width)
+        #     self.panel_scroll_area.setMinimumHeight(self.grid_size * 13 + self.spacing_width * 2)
+        #     self.panel_scroll_area.setMaximumHeight(self.grid_size * 13 + self.spacing_width * 2)
 
     # 布局变宽
     def push_button_add_box_width_click(self):
@@ -436,6 +453,49 @@ class CardPermutationWindow(AgileTilesAcrylicWindow, Ui_Form):
             if card_width > max_width:
                 max_width = card_width
         return max_width
+
+    # 布局变高
+    def push_button_add_box_height_click(self):
+        # 检测点击间隔
+        current_time = QDateTime.currentMSecsSinceEpoch()
+        if current_time - self.last_click_time < self.click_delay:
+            return
+        self.last_click_time = current_time
+        # 判断是否超过最大宽度
+        if self.box_card_height >= self.max_panel_height:
+            message_box_util.box_information(self.use_parent, "提示", "布局宽度不能再扩展了")
+            return
+        self.box_card_height += 1
+        self.refresh_window_show()
+
+    # 布局变矮
+    def push_button_reduce_box_height_click(self):
+        # 检测点击间隔
+        current_time = QDateTime.currentMSecsSinceEpoch()
+        if current_time - self.last_click_time < self.click_delay:
+            return
+        self.last_click_time = current_time
+        # 检测是否超过最小宽度
+        min_height = self.get_box_has_card_max_height()
+        if self.box_card_height <= min_height:
+            message_box_util.box_information(self.use_parent, "提示", "布局宽度不能再缩小了，若想变窄需要删除边缘卡片")
+            return
+        if self.box_card_height > 1:
+            self.box_card_height -= 1
+            if self.scene is not None:
+                self.scene.clear()
+            self.refresh_window_show()
+
+    def get_box_has_card_max_height(self):
+        """获取有卡片的最大高度"""
+        max_height = 0
+        for card_item in self.card_items:
+            card_data = card_item.get_card_data()
+            # print(card_data)
+            card_height = int(card_data["size"].split("_")[1]) + int(card_data["y"]) - 1
+            if card_height > max_height:
+                max_height = card_height
+        return max_height
 
     def refresh_window_show(self):
         # 刷新视图场景
