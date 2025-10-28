@@ -1464,13 +1464,16 @@ class AgileTilesForm(MainAcrylicWindow, Ui_Form):
 
     def mouseReleaseEvent(self, event):
         if event.button() == Qt.LeftButton:
+            before_dragging = self.dragging
             self.dragging = False
+            self.drag_position = None
             self.resize_edge = None
             self.resize_start_pos = None
             self.resize_start_geometry = None
             event.accept()
-            # 拖拽结束后判断窗口位置
-            self.check_window_position()
+            if before_dragging:
+                # 拖拽结束后判断窗口位置
+                self.check_window_position()
 
     def check_window_position(self):
         """判断窗口在屏幕中的位置"""
